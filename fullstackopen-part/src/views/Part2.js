@@ -27,9 +27,9 @@ const Part2 = (props) => {
 
         requestUtil.save(noteObject).then(res => {
             console.log(res);
+            getAll();
         })
-        setNewNote('');
-        getAll();
+        setNewNote('a new note...');
     }
 
     const handleNoteChange = (event) => {

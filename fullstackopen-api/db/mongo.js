@@ -13,6 +13,7 @@ const url = `mongodb://fullstack:${password}@192.168.56.101/fullstack?retryWrite
 mongoose.connect(url);
 
 const noteSchema = new mongoose.Schema({
+  id: String,
   content: String,
   date: Date,
   important: Boolean,
@@ -45,11 +46,15 @@ const save = (data, callback) => {
 };
 
 const find = (query, callback) => {
-  Note.find(query).then(async (note) => {
-    if (note) {
-      callback(note);
-    }
-  });
+  Note.find(query)
+    .then(async (note) => {
+      if (note) {
+        callback(note);
+      }
+    })
+    .catch((e) => {
+      callback(null);
+    });
 };
 
 module.exports = { find, save };

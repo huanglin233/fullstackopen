@@ -110,25 +110,35 @@ appExpress.get("/api/db/getAllNote", (request, response) => {
   });
 });
 // 创建笔记
-appExpress.post('/api/db/save', (request, response) => {
-    console.log("新增笔记");
-    const body = request.body;
+appExpress.post("/api/db/save", (request, response) => {
+  console.log("新增笔记");
+  const body = request.body;
 
-    if(body.content === undefined) {
-        return response.status(400).json({error: 'content missing'})
+  if (body.content === undefined) {
+    return response.status(400).json({ error: "content missing" });
+  }
+
+  const note = {
+    content: body.content,
+    important: body.important || false,
+    date: new Date(),
+  };
+
+  db.save(note, (e) => {
+    console.log(e);
+    response.send("数据新增完成");
+  });
+});
+// 根据id查询笔记
+appExpress.get("/api/db/getNode/:id", (request, response) => {
+  db.find({ _id: request.params.id }, (e) => {
+    if (e) {
+      response.json(e);
+    } else {
+      response.status(404).end();
     }
-
-    const note = {
-        content: body.content,
-        important: body.important || false,
-        date: new Date()
-    }
-
-    db.save(note, (e) => {
-        console.log(e);
-        response.send("数据新增完成");
-    })
-})
+  })
+});
 
 // 捕捉不存的路由
 const unknownEndpoint = (request, response) => {
