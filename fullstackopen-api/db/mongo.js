@@ -57,4 +57,15 @@ const find = (query, callback) => {
     });
 };
 
-module.exports = { find, save };
+const delById = (query, callback) => {
+  Note.deleteOne(query)
+    .then((res) => {
+      console.log(res);
+      callback(res);
+    })
+    .catch((e) => {
+      callback(null);
+    });
+};
+
+module.exports = { find, save, delById };

@@ -129,6 +129,7 @@ appExpress.post("/api/db/save", (request, response) => {
     response.send("数据新增完成");
   });
 });
+
 // 根据id查询笔记
 appExpress.get("/api/db/getNode/:id", (request, response) => {
   db.find({ _id: request.params.id }, (e) => {
@@ -137,7 +138,18 @@ appExpress.get("/api/db/getNode/:id", (request, response) => {
     } else {
       response.status(404).end();
     }
-  })
+  });
+});
+
+// 删除一个笔记
+appExpress.get("/api/db/delNote/:id", (request, response) => {
+  db.delById({ _id: request.params.id }, (e) => {
+    if (e) {
+      response.json(e);
+    } else {
+      response.status(500).send({ error: "删除失败" });
+    }
+  });
 });
 
 // 捕捉不存的路由
@@ -145,5 +157,16 @@ const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });
 };
 appExpress.use(unknownEndpoint);
+
+// 全局异常捕获
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "格式错误" });
+  }
+
+  return response.status(500).send({ error: "内部处理错误" });
+};
 
 exports.app = appExpress;
