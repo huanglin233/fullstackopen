@@ -152,6 +152,23 @@ appExpress.get("/api/db/delNote/:id", (request, response) => {
   });
 });
 
+// 更新一个笔记
+appExpress.put("/api/db/updateNote/:id", (request, response) => {
+  const body = request.body;
+  const note = {
+    content: body.content,
+    important: body.important,
+  };
+
+  db.updateById(request.params.id, note, (e) => {
+    if (e) {
+      response.json(e);
+    } else {
+      response.status(500).send({ error: "更新失败" });
+    }
+  });
+});
+
 // 捕捉不存的路由
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: "unknown endpoint" });

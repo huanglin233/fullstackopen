@@ -68,4 +68,15 @@ const delById = (query, callback) => {
     });
 };
 
-module.exports = { find, save, delById };
+const updateById = (id, note, callback) => {
+  Note.findByIdAndUpdate(id, note, { new: true })
+    .then((res) => {
+      callback(res);
+    })
+    .catch((e) => {
+      console.log(e);
+      callback(null);
+    });
+};
+
+module.exports = { find, save, delById, updateById };
