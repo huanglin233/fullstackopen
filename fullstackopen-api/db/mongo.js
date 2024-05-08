@@ -14,7 +14,11 @@ mongoose.connect(url);
 
 const noteSchema = new mongoose.Schema({
   id: String,
-  content: String,
+  content: {
+    type: String,
+    minLength: 5,
+    required: true,
+  },
   date: Date,
   important: Boolean,
 });
@@ -39,10 +43,14 @@ const save = (data, callback) => {
   const n = new Note({
     ...data,
   });
-  n.save().then((result) => {
-    console.log("note save");
-    callback(result);
-  });
+  n.save()
+    .then((result) => {
+      console.log("note save");
+      callback(result);
+    })
+    .catch((e) => {
+      callback({ error: "新增错误" + e });
+    });
 };
 
 const find = (query, callback) => {

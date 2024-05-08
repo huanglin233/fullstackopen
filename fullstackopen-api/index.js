@@ -1,4 +1,4 @@
-const {app} = require('./restful.js');
+const {app} = require('./controller/restful.js');
 require('dotenv').config();
 
 console.log("nodejs后端开始启动");
