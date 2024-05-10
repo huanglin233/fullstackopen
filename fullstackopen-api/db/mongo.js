@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const logger = require('../utils/logger.js');
 
 mongoose.set("strictQuery", false);
 
@@ -45,7 +46,7 @@ const save = (data, callback) => {
   });
   n.save()
     .then((result) => {
-      console.log("note save");
+      logger.info("note save");
       callback(result);
     })
     .catch((e) => {
@@ -68,7 +69,7 @@ const find = (query, callback) => {
 const delById = (query, callback) => {
   Note.deleteOne(query)
     .then((res) => {
-      console.log(res);
+      logger.info(res);
       callback(res);
     })
     .catch((e) => {
@@ -82,7 +83,7 @@ const updateById = (id, note, callback) => {
       callback(res);
     })
     .catch((e) => {
-      console.log(e);
+      logger.info(e);
       callback(null);
     });
 };

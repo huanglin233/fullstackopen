@@ -1,4 +1,5 @@
 const http = require("http");
+const logger = require('../utils/logger.js');
 const app = http.createServer((request, response) => {
   response.writeHead(200, { "Content-Type": "text/json" });
   response.end("hello word");
@@ -6,18 +7,18 @@ const app = http.createServer((request, response) => {
 
 const port = 3001;
 app.listen(port);
-console.log(`server running on port ${port}`);
+logger.info(`server running on port ${port}`);
 
 // 使用express编写接口
-const express = require("express");
+const express = require("express")
 const appExpress = express();
 appExpress.use(express.json());
 
 // 统一处理
 const requestLogger = (request, response, next) => {
-  console.log("method: ", request.method);
-  console.log("path: ", request.path);
-  console.log("body", request.body);
+  logger.info("method: ", request.method);
+  logger.info("path: ", request.path);
+  logger.info("body", request.body);
 
   next();
 };
@@ -80,8 +81,8 @@ const generatedId = () => {
 // 新增操作 post
 appExpress.post("/api/add/notes", (request, response) => {
   const body = request.body;
-  console.log(body);
-  console.log(request.header);
+  logger.info(body);
+  logger.info(request.header);
   if (!body.content) {
     return response.status(400).json({
       error: "content missing",
@@ -103,15 +104,15 @@ appExpress.post("/api/add/notes", (request, response) => {
 // 查询db数据库
 const db = require("../db/mongo.js");
 appExpress.get("/api/db/getAllNote", (request, response) => {
-  console.log("查询数据");
+  logger.info("查询数据");
   db.find({}, (e) => {
-    console.log(e);
+    logger.info(e);
     response.json(e);
   });
 });
 // 创建笔记
 appExpress.post("/api/db/save", (request, response) => {
-  console.log("新增笔记");
+  logger.info("新增笔记");
   const body = request.body;
 
   if (body.content === undefined) {
@@ -125,7 +126,7 @@ appExpress.post("/api/db/save", (request, response) => {
   };
 
   db.save(note, (e) => {
-    console.log(e);
+    logger.info(e);
     response.send(e);
   });
 });
@@ -177,7 +178,7 @@ appExpress.use(unknownEndpoint);
 
 // 全局异常捕获
 const errorHandler = (error, request, response, next) => {
-  console.error(error.message);
+  logger.error(error.message);
 
   if (error.name === "CastError") {
     return response.status(400).send({ error: "格式错误" });
