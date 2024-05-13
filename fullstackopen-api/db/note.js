@@ -1,17 +1,5 @@
-const mongoose = require("mongoose");
 const logger = require('../utils/logger.js');
-
-mongoose.set("strictQuery", false);
-
-// if(process.argv.length < 3) {
-//     console.log('请在命令参数带上mongodb的密码');
-//     process.exit(1);
-// }
-
-const password = "fullstack";
-const url = `mongodb://fullstack:${password}@192.168.56.101/fullstack?retryWrites=true&w=majority`;
-
-mongoose.connect(url);
+const mongoose = require("mongoose");
 
 const noteSchema = new mongoose.Schema({
   id: String,

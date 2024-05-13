@@ -1,9 +1,7 @@
-const {app} = require('./controller/restful.js');
-const logger = require('./utils/logger.js');
-require('dotenv').config();
+const app = require('./app');
+const config = require('./utils/config');
+const logger = require('./utils/logger');
 
-logger.info("nodejs后端开始启动");
-const port = process.env.PORT
-app.listen(port, () => {
-    logger.info(`server running on port ${port}`);
+app.listen(config.PORT, () => {
+    logger.info(`server running on port ${config.PORT}`);
 });
