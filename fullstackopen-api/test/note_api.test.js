@@ -3,6 +3,7 @@ const assert = require("node:assert");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const app = require("../app");
+const helper = require('./test_helper');
 
 const api = supertest(app);
 
@@ -23,6 +24,24 @@ test("the first note is about HTTP methods", async () => {
   const contents = response.body.map((e) => e.content);
   assert.strictEqual(contents.includes("hl233"), true);
 });
+
+test("a valid note can be added", async () => {
+    const newNote = {
+        content: 'async/await simplifies making async calls',
+        important: true
+    }
+
+    const oldNotes = helper.notesInDb.length;
+    await api.post('/api/add')
+    .send(newNote)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+    const curNotes = helper.notesInDb;
+    const contents = curNotes.map(e => JSON.parse(e).content); 
+    assert.strictEqual(curNotes.length, oldNotes + 1);
+    assert(contents.includes('async/await simplifies making async calls'));
+})
 
 after(async () => {
   await mongoose.connection.close();

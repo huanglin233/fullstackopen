@@ -76,4 +76,4 @@ const updateById = (id, note, callback) => {
     });
 };
 
-module.exports = { find, save, delById, updateById };
+module.exports = { find, save, delById, updateById, Note };

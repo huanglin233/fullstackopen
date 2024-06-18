@@ -143,4 +143,20 @@ router.put("/db/updateNote/:id", (request, response) => {
   });
 });
 
+// 新增笔记使用async/await--测试类接口
+router.post('/add', async (request, response) => {
+    // const data = request.body;
+    // const note = {
+    //     content: data.content || '233',
+    //     important: data.important || fasle
+    // };
+    // const ret = await db.save(note);
+
+    response.send("233");
+})
+router.post('/query/notes', async (request, response) => {
+    const notes = await db.find({});
+    response.json(notes);
+})
+
 module.exports = router;
