@@ -22,7 +22,7 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).send({ error: "格式错误" });
   }
 
-  return response.status(500).send({ error: "内部处理错误" });
+  return response.status(500).send({ error: "内部处理错误" + error.message });
 };
 
 module.exports = {

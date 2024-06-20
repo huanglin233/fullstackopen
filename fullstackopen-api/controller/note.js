@@ -145,14 +145,15 @@ router.put("/db/updateNote/:id", (request, response) => {
 
 // 新增笔记使用async/await--测试类接口
 router.post('/add', async (request, response) => {
-    // const data = request.body;
-    // const note = {
-    //     content: data.content || '233',
-    //     important: data.important || fasle
-    // };
-    // const ret = await db.save(note);
+    const data = request.body;
+    console.log(data);
+    const note = {
+        content: data.content || '233',
+        important: data.important || fasle
+    };
+    const ret = await db.save(note);
 
-    response.send("233");
+    response.json({state: 'ok'});
 })
 router.post('/query/notes', async (request, response) => {
     const notes = await db.find({});
