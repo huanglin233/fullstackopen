@@ -22,11 +22,16 @@ const nonExistingId = async () => {
 const notesInDb = async () => {
   const notes = await Note.find({});
 
-  return notes.map((note) => note.toJSON);
+  return notes;
+};
+
+const deleteOne = async (id) => {
+  await Note.deleteOne({ _id: id });
 };
 
 module.exports = {
   initialNotes,
   nonExistingId,
   notesInDb,
+  deleteOne,
 };

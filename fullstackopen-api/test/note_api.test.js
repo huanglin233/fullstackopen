@@ -27,22 +27,24 @@ test("the first note is about HTTP methods", async () => {
 
 test("a valid note can be added", async () => {
   const newNote = {
-    content: "233",
+    content: "hl2331 come on",
     important: true,
   };
 
-  // const oldNotes = helper.notesInDb.length;
+  const oldNotes = await api.get("/api/db/getAllNote");
   await api
     .post("/api/add")
-    .set("Content-Type", "application/json; charset=utf-8") // 显式指定charset
     .send(newNote)
+    .set("Content-Type", "application/json; charset=utf-8")
     .expect(200)
     .expect("Content-Type", /application\/json/);
 
-  // const curNotes = helper.notesInDb;
-  // const contents = curNotes.map((e) => JSON.parse(e).content);
-  // assert.strictEqual(curNotes.length, oldNotes + 1);
-  // assert(contents.includes("async/await simplifies making async calls"));
+  const curNotes = await api.get("/api/db/getAllNote");
+  const contents = curNotes.body.map((e) => e.content);
+  await api.get("/api/db/delNote/" + curNotes.body[curNotes.body.length - 1].id)
+    .expect(200);
+  assert.strictEqual(curNotes.body.length, oldNotes.body.length + 1);
+  assert(contents.includes("hl2331 come on"));
 });
 
 after(async () => {

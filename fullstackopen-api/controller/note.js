@@ -76,88 +76,119 @@ router.post("/add/notes", (request, response) => {
 
 // 查询db数据库
 const db = require("../db/note.js");
-router.get("/db/getAllNote", (request, response) => {
+router.get("/db/getAllNote", (request, response, next) => {
   logger.info("查询数据");
-  db.find({}, (e) => {
-    logger.info(e);
-    response.json(e);
-  });
+  try {
+    db.find({}, (e) => {
+      logger.info(e);
+      response.json(e);
+    });
+  } catch (e) {
+    next(e);
+  }
 });
 // 创建笔记
-router.post("/db/save", (request, response) => {
+router.post("/db/save", (request, response, next) => {
   logger.info("新增笔记");
-  const body = request.body;
+  try {
+    const body = request.body;
 
-  if (body.content === undefined) {
-    return response.status(400).json({ error: "content missing" });
+    if (body.content === undefined) {
+      return response.status(400).json({ error: "content missing" });
+    }
+
+    const note = {
+      content: body.content,
+      important: body.important || false,
+      date: new Date(),
+    };
+
+    db.save(note, (e) => {
+      logger.info(e);
+      response.send(e);
+    });
+  } catch (e) {
+    next(e);
   }
-
-  const note = {
-    content: body.content,
-    important: body.important || false,
-    date: new Date(),
-  };
-
-  db.save(note, (e) => {
-    logger.info(e);
-    response.send(e);
-  });
 });
 
 // 根据id查询笔记
-router.get("/db/getNode/:id", (request, response) => {
-  db.find({ _id: request.params.id }, (e) => {
-    if (e) {
-      response.json(e);
-    } else {
-      response.status(404).end();
-    }
-  });
+router.get("/db/getNode/:id", (request, response, next) => {
+  try {
+    db.find({ _id: request.params.id }, (e) => {
+      if (e) {
+        response.json(e);
+      } else {
+        response.status(404).end();
+      }
+    });
+  } catch (e) {
+    next(e);
+  }
 });
 
 // 删除一个笔记
-router.get("/db/delNote/:id", (request, response) => {
-  db.delById({ _id: request.params.id }, (e) => {
-    if (e) {
-      response.json(e);
-    } else {
-      response.status(500).send({ error: "删除失败" });
-    }
-  });
+router.get("/db/delNote/:id", (request, response, next) => {
+  try {
+    db.delById({ _id: request.params.id }, (e) => {
+      if (e) {
+        response.json(e);
+      } else {
+        response.status(500).send({ error: "删除失败" });
+      }
+    });
+  } catch (e) {
+    next(e);
+  }
 });
 
 // 更新一个笔记
-router.put("/db/updateNote/:id", (request, response) => {
-  const body = request.body;
-  const note = {
-    content: body.content,
-    important: body.important,
-  };
+router.put("/db/updateNote/:id", (request, response, next) => {
+  try {
+    const body = request.body;
+    const note = {
+      content: body.content,
+      important: body.important,
+    };
 
-  db.updateById(request.params.id, note, (e) => {
-    if (e) {
-      response.json(e);
-    } else {
-      response.status(500).send({ error: "更新失败" });
-    }
-  });
+    db.updateById(request.params.id, note, (e) => {
+      if (e) {
+        response.json(e);
+      } else {
+        response.status(500).send({ error: "更新失败" });
+      }
+    });
+  } catch (e) {
+    next(e);
+  }
 });
 
+const { Note } = require("../db/note.js");
 // 新增笔记使用async/await--测试类接口
-router.post('/add', async (request, response) => {
+router.post("/add", async (request, response, next) => {
+  try {
     const data = request.body;
-    console.log(data);
-    const note = {
-        content: data.content || '233',
-        important: data.important || fasle
-    };
-    const ret = await db.save(note);
+    const note = new Note({
+      content: data.content || "233",
+      important: data.important || false,
+    });
+    const ret = await note.save();
 
-    response.json({state: 'ok'});
-})
-router.post('/query/notes', async (request, response) => {
+    console.log(ret);
+
+    response.json(ret);
+  } catch (e) {
+    next(e);
+  }
+});
+
+router.post("/query/notes", async (request, response, next) => {
+  try {
     const notes = await db.find({});
     response.json(notes);
-})
+  } catch (e) {
+    next(e);
+  }
+});
 
 module.exports = router;
