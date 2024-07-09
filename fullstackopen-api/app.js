@@ -1,18 +1,19 @@
 const config = require("./utils/config");
 const notesRouter = require("./controller/note");
+const usersRouter = require("./controller/user");
 const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
 const mongoose = require("mongoose");
 const express = require("express");
-require('express-async-errors');
+require("express-async-errors");
 const app = express();
 const cors = require("cors");
-const bodyPaser = require('body-parser');
+const bodyPaser = require("body-parser");
 
 // 解析application/json数据
 const jsonParser = bodyPaser.json();
 // 解析application/x-www-form-urlencode数据
-const urlencodedParser = bodyPaser.urlencoded({extended: false})
+const urlencodedParser = bodyPaser.urlencoded({ extended: false });
 
 mongoose.set("strictQuery", false);
 logger.info("connecting to", config.MONGODB_URL);
@@ -41,6 +42,7 @@ app.use(jsonParser);
 app.use(urlencodedParser);
 app.use(middleware.requestLogger);
 app.use("/api", notesRouter);
+app.use("/api/user", usersRouter);
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 

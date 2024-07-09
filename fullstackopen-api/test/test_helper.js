@@ -1,4 +1,5 @@
 const { Note } = require("../db/note");
+const User = require("../db/user");
 
 const initialNotes = [
   {
@@ -28,6 +29,16 @@ const notesInDb = async () => {
 const deleteOne = async (id) => {
   await Note.deleteOne({ _id: id });
 };
+
+// 查询数据库中的用户列表
+const usersInDb = async () => {
+    const users = await User.find({});
+    if(users) {
+        return users.map(u => u.toJSON());
+    } else {
+        return [];
+    }
+}
 
 module.exports = {
   initialNotes,
