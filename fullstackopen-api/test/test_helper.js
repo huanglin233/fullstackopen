@@ -32,17 +32,18 @@ const deleteOne = async (id) => {
 
 // 查询数据库中的用户列表
 const usersInDb = async () => {
-    const users = await User.find({});
-    if(users) {
-        return users.map(u => u.toJSON());
-    } else {
-        return [];
-    }
-}
+  const users = await User.find({});
+  if (users) {
+    return users.map((u) => u.toJSON());
+  } else {
+    return [];
+  }
+};
 
 module.exports = {
   initialNotes,
   nonExistingId,
   notesInDb,
   deleteOne,
+  usersInDb,
 };
