@@ -1,5 +1,6 @@
 const logger = require("../utils/logger.js");
 const router = require("express").Router();
+const User = require("../db/user");
 
 let notes = [
   {
@@ -165,14 +166,21 @@ router.put("/db/updateNote/:id", (request, response, next) => {
 
 const { Note } = require("../db/note.js");
 // 新增笔记使用async/await--测试类接口
-router.post("/add", async (request, response, next) => {
+router.post("/note/add", async (request, response, next) => {
   try {
     const data = request.body;
+    const user = await User.findById(data.userId);
+
     const note = new Note({
       content: data.content || "233",
       important: data.important || false,
+      user: user.id
     });
     const ret = await note.save();
+
+    console.log(user.notes);
+    user.notes = user.notes.concat(ret._id);
+    await user.save();
 
     console.log(ret);
 

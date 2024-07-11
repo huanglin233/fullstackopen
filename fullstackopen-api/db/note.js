@@ -1,4 +1,4 @@
-const logger = require('../utils/logger.js');
+const logger = require("../utils/logger.js");
 const mongoose = require("mongoose");
 
 const noteSchema = new mongoose.Schema({
@@ -10,10 +10,10 @@ const noteSchema = new mongoose.Schema({
   },
   date: Date,
   important: Boolean,
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    }
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 noteSchema.set("toJSON", {

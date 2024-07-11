@@ -19,7 +19,7 @@ usersRouter.post("/add", async (request, response) => {
 });
 
 usersRouter.get("/list", async (request, response) => {
-  const users = await User.find({});
+  const users = await User.find({}).populate('notes', {content: 'user'});
 
   response.status(200).json(users);
 });
