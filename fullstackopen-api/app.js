@@ -1,6 +1,7 @@
 const config = require("./utils/config");
 const notesRouter = require("./controller/note");
 const usersRouter = require("./controller/user");
+const loginRouter = require("./controller/login");
 const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
 const mongoose = require("mongoose");
@@ -43,6 +44,7 @@ app.use(urlencodedParser);
 app.use(middleware.requestLogger);
 app.use("/api", notesRouter);
 app.use("/api/user", usersRouter);
+app.use("/api/auth", loginRouter);
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
 
