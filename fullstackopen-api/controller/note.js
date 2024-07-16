@@ -1,6 +1,7 @@
 const logger = require("../utils/logger.js");
 const router = require("express").Router();
 const User = require("../db/user");
+const jwt = require("jsonwebtoken");
 
 let notes = [
   {
@@ -164,17 +165,30 @@ router.put("/db/updateNote/:id", (request, response, next) => {
   }
 });
 
+const getTokenFrom = (request) => {
+  const authorization = request.get("authorization");
+  if (authorization && authorization.startsWith("Bearer ")) {
+    return authorization.replace("Bearer ", "");
+  }
+  return null;
+};
+
 const { Note } = require("../db/note.js");
 // 新增笔记使用async/await--测试类接口
 router.post("/note/add", async (request, response, next) => {
   try {
     const data = request.body;
-    const user = await User.findById(data.userId);
+    // 校验token是否有效
+    const decodeToken = jwt.verify(getTokenFrom(request), process.env.SECRET);
+    if (!decodeToken.id) {
+      return response.status(401).json({ error: "token invalid" });
+    }
+    const user = await User.findById(decodeToken.id);
 
     const note = new Note({
       content: data.content || "233",
       important: data.important || false,
-      user: user.id
+      user: user.id,
     });
     const ret = await note.save();
 
