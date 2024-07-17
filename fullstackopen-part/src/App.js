@@ -7,6 +7,7 @@ import ComplexState from './views/ComplexState';
 import HandlingArrays from './views/HandlingArrays';
 import Part1 from './views/Part1';
 import Part2 from './views/Part2';
+import Part3 from './views/Part3';
 
 const Hello = (props) => {
     console.log("hello come to react component");
@@ -145,6 +146,7 @@ const App = (prop) => {
             <HandlingArrays></HandlingArrays>
             <Part1></Part1>
             <Part2 notes={notes}></Part2>
+            <Part3 />
         </div>
     )
 }
