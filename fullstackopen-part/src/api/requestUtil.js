@@ -21,4 +21,17 @@ const save = (data) => {
   return res.then((response) => response);
 };
 
-export default { getAll, save };
+const login = async (form) => {
+  const response = await axios({
+    method: "POST",
+    url: baseUrl + "api/auth/login",
+    data: form,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  return response;
+};
+
+export default { getAll, save, login};
