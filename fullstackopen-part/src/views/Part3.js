@@ -1,15 +1,26 @@
 // 用户登录表单react
 import {useState} from 'react';
+import requestUtil from '../api/requestUtil.js';
 
 import Text from '../component/Text';
 
 const LoginForm = (props) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [user, setUser] = useState(null);
 
     const handleLogin = (event) => {
         event.preventDefault();
         console.log("logging in with", username, password);
+        requestUtil.login({
+            username: username,
+            password: password
+        }).then(res => {
+                console.log(res);
+                setUser(res);
+                setUsername('');
+                setPassword('');
+            })
     }
 
     return (

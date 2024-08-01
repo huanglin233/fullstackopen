@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from '../utils/request.js';
 
 const baseUrl = "http://127.0.0.1:3002/";
 
@@ -21,8 +21,8 @@ const save = (data) => {
   return res.then((response) => response);
 };
 
-const login = async (form) => {
-  const response = await axios({
+const login = (form) => {
+  const res = axios({
     method: "POST",
     url: baseUrl + "api/auth/login",
     data: form,
@@ -31,7 +31,7 @@ const login = async (form) => {
     },
   });
 
-  return response;
+  return res.then((response) => response);
 };
 
 export default { getAll, save, login};
