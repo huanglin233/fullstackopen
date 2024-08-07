@@ -5,7 +5,7 @@ const baseUrl = "http://127.0.0.1:3002/";
 const getAll = () => {
   const request = axios.get(baseUrl + "api/db/getAllNote");
 
-  return request.then((response) => response.data);
+  return request.then((response) => response);
 };
 
 const save = (data) => {

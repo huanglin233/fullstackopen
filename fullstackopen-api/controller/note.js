@@ -167,8 +167,8 @@ router.put("/db/updateNote/:id", (request, response, next) => {
 
 const getTokenFrom = (request) => {
   const authorization = request.get("authorization");
-  if (authorization && authorization.startsWith("Bearer ")) {
-    return authorization.replace("Bearer ", "");
+  if (authorization) {
+    return authorization;
   }
   return null;
 };
@@ -212,5 +212,6 @@ router.post("/query/notes", async (request, response, next) => {
     next(e);
   }
 });
+
 
 module.exports = router;

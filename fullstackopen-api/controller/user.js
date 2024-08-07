@@ -19,9 +19,17 @@ usersRouter.post("/add", async (request, response) => {
 });
 
 usersRouter.get("/list", async (request, response) => {
-  const users = await User.find({}).populate('notes', {content: 'user'});
+  const users = await User.find({}).populate("notes", { content: "user" });
 
   response.status(200).json(users);
+});
+
+usersRouter.get("/list/:id", async (request, response) => {
+  const userNoteList = await User.find({ _id: request.params.id }).populate(
+    "notes",
+  );
+
+  response.status(200).json(userNoteList);
 });
 
 module.exports = usersRouter;
