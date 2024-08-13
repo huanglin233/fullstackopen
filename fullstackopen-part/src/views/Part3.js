@@ -9,6 +9,7 @@ const LoginForm = (props) => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
   const [newNote, setNewNote] = useState(null);
+  const [Notes, setNotes] = useState([]);
 
   const handleLogin = (event) => {
     event.preventDefault();
@@ -21,15 +22,29 @@ const LoginForm = (props) => {
       .then((res) => {
         console.log(res);
         setUser(res);
+        requestUtil.setToken(res.token);
         setUsername("");
         setPassword("");
       });
   };
 
-  const addNote = (event) => {};
-  const handleNoteChange = (target) => {
+  const addNote = (event) => {
+    event.preventDefault();
+    requestUtil.saveByUserId({ content: newNote }).then((res) => {
+      getNoteList();
+    });
+  };
+  const handleNoteChange = ({ target }) => {
     console.log(target.value);
     setNewNote(target.value);
+  };
+
+  const getNoteList = () => {
+    requestUtil.getNoteByUser().then((res) => {
+      console.log(res[0].notes);
+      setNotes(res[0].notes);
+      console.log(Notes);
+    });
   };
 
   const note = () => (
@@ -67,7 +82,13 @@ const LoginForm = (props) => {
     <div>
       <Text text="用户登录表单"></Text>
       {user === null ? login() : note()}
+      {user !== null && <button onClick={getNoteList}>获取笔记列表</button>}
       <h2>NotesList</h2>
+      <ul>
+        {Notes.map((e) => (
+          <li>{e.content}</li>
+        ))}
+      </ul>
     </div>
   );
 };

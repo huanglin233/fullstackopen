@@ -1,6 +1,12 @@
-import axios from '../utils/request.js';
+import axios from "../utils/request.js";
 
 const baseUrl = "http://127.0.0.1:3002/";
+
+let token = null;
+
+const setToken = (newToken) => {
+  token = newToken;
+};
 
 const getAll = () => {
   const request = axios.get(baseUrl + "api/db/getAllNote");
@@ -34,4 +40,36 @@ const login = (form) => {
   return res.then((response) => response);
 };
 
-export default { getAll, save, login};
+/**
+ * 用户登录后的新增
+ */
+const saveByUserId = (data) => {
+  const res = axios({
+    method: "POST",
+    url: baseUrl + "api/note/add",
+    data: data,
+    headers: {
+      authorization: token,
+      "Content-Type": "application/json",
+    },
+  });
+
+  return res.then((response) => response);
+};
+
+/**
+ * 获取当前登录人笔记列表
+ */
+const getNoteByUser = () => {
+  const res = axios({
+    method: "get",
+    url: baseUrl + "api/user/note/list",
+    headers: {
+      authorization: token,
+    },
+  });
+
+  return res.then((response) => response);
+};
+
+export default { getAll, save, login, saveByUserId, getNoteByUser, setToken };
