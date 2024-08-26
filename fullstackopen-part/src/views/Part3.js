@@ -1,8 +1,9 @@
 // 用户登录表单react
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import requestUtil from "../api/requestUtil.js";
 
 import Text from "../component/Text";
+import Login from "../component/LoginForm.js";
 
 const LoginForm = (props) => {
   const [username, setUsername] = useState("");
@@ -22,6 +23,7 @@ const LoginForm = (props) => {
       .then((res) => {
         console.log(res);
         setUser(res);
+        window.localStorage.setItem("loggedNoteappUser", JSON.stringify(res));
         requestUtil.setToken(res.token);
         setUsername("");
         setPassword("");
@@ -47,6 +49,17 @@ const LoginForm = (props) => {
     });
   };
 
+  // 检查是否登录了
+  useEffect(() => {
+    const userStr = window.localStorage.getItem("loggedNoteappUser");
+    if (user) {
+      const user = JSON.parse(userStr);
+      setUser(user);
+      requestUtil.setToken(user.token);
+      getNoteList();
+    }
+  }, []);
+
   const note = () => (
     <form onSubmit={addNote}>
       <input value={newNote} onChange={handleNoteChange} />
@@ -55,27 +68,13 @@ const LoginForm = (props) => {
   );
 
   const login = () => (
-    <form onSubmit={handleLogin}>
-      <div>
-        username:
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
-      </div>
-      <div>
-        password:
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
-      </div>
-      <button type="submit">login</button>
-    </form>
+    <Login
+      handleSubmit={handleLogin}
+      handleUserNameChange={({ target }) => setUsername(target.value)}
+      handlePasswordChange={({ target }) => setPassword(target.value)}
+      username={username}
+      password={password}
+    ></Login>
   );
 
   return (
